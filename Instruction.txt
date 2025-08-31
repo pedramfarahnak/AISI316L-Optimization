@@ -1,0 +1,91 @@
+"""
+Bayesian_controller.py
+----------------------
+Manages Bayesian Optimization (via scikit-optimize) for calibration of
+post-necking hardening laws in AISI 316L. Launches Abaqus worker jobs,
+collects objective values, and saves optimization results.
+"""
+"""
+Bayesian_worker.py
+------------------
+Objective function script for Bayesian Optimization. For a given n-value,
+updates the Abaqus input file, runs the simulation, extracts results,
+computes cost function against experimental data, and outputs the score
+to objective.txt.
+"""
+
+
+
+"""
+Hyperopt_TPE.py
+---------------
+Applies the Tree-structured Parzen Estimator (TPE) optimization method
+(surrogate-based, machine learning–driven) for calibration of the post-necking
+hardening law of additively manufactured AISI 316L.
+
+Main features:
+- Samples candidate n-values from adaptive probability models.
+- For each candidate:
+    * Generates a plastic curve from tensile test data.
+    * Updates the Abaqus input file with the curve.
+    * Runs the Abaqus simulation and collects results.
+    * Compares numerical results with interpolated experimental data.
+    * Computes the cost function (relative error).
+- Iteratively refines the surrogate distribution to balance exploration vs. exploitation.
+- Saves optimization history and best result to 'Optimization_Results_TPE.xlsx'.
+
+Usage:
+Run directly inside an Abaqus Python environment:
+    abaqus python Hyperopt_TPE.py
+"""
+
+
+
+"""
+GA.py
+-----
+Implements a Genetic Algorithm (GA) using the DEAP framework to calibrate the
+post-necking hardening law of additively manufactured AISI 316L.
+
+Main features:
+- Initializes a population of candidate n-values (hardening exponent).
+- Applies selection, crossover, and mutation to evolve the population.
+- For each candidate:
+    * Generates a plastic curve based on tensile test data.
+    * Updates the Abaqus input file with the curve.
+    * Runs the Abaqus simulation and collects displacement–force results.
+    * Compares numerical results to interpolated experimental data.
+    * Computes the cost function (relative error).
+- Saves all iterations, costs, and best solution to 'Optimization_Results_GA.xlsx'.
+
+Usage:
+Run directly inside an Abaqus Python environment:
+    abaqus python GA.py
+"""
+
+
+
+"""
+PSO4.py
+-------
+Implements Particle Swarm Optimization (PSO) using the pyswarm library to
+calibrate the post-necking hardening law of additively manufactured AISI 316L.
+
+Main features:
+- Initializes a swarm of particles representing candidate n-values.
+- Updates particle positions and velocities using PSO rules.
+- For each particle:
+    * Generates a plastic curve from tensile test data.
+    * Updates the Abaqus input file with the curve.
+    * Runs the Abaqus simulation and collects results.
+    * Compares numerical results with interpolated experimental data.
+    * Computes the cost function (mean relative error).
+- Tracks convergence and saves results to 'Optimization_Results_PSO.xlsx'.
+
+Usage:
+Run directly inside an Abaqus Python environment:
+    abaqus python PSO4.py
+"""
+
+
+
