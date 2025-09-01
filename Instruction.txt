@@ -17,27 +17,42 @@ to objective.txt.
 
 
 """
-Hyperopt_TPE.py
----------------
-Applies the Tree-structured Parzen Estimator (TPE) optimization method
-(surrogate-based, machine learning–driven) for calibration of the post-necking
-hardening law of additively manufactured AISI 316L.
-
-Main features:
-- Samples candidate n-values from adaptive probability models.
-- For each candidate:
-    * Generates a plastic curve from tensile test data.
-    * Updates the Abaqus input file with the curve.
-    * Runs the Abaqus simulation and collects results.
-    * Compares numerical results with interpolated experimental data.
-    * Computes the cost function (relative error).
-- Iteratively refines the surrogate distribution to balance exploration vs. exploitation.
-- Saves optimization history and best result to 'Optimization_Results_TPE.xlsx'.
-
-Usage:
-Run directly inside an Abaqus Python environment:
-    abaqus python Hyperopt_TPE.py
 """
+TPE.py
+------
+Tree-structured Parzen Estimator (TPE) calibration of the post-necking hardening
+law for additively manufactured AISI 316L using Hyperopt.
+
+What it does
+- Samples candidate hardening exponents `n ~ U(-0.5, 1.5)` with TPE (hyperopt).
+- For each `n`:
+  * Builds the plastic curve from tensile data (xlrd).
+  * Injects the curve into an Abaqus input deck.
+  * Runs the Abaqus job and opens the .odb.
+  * Extracts U and RF, mirrors symmetry factors, and computes a cost vs. an
+    interpolated experimental force–displacement curve.
+- Logs every evaluation and saves a full history to `Optimization_Results_TPE.xlsx`.
+
+Reproducibility
+- Algorithm: Hyperopt TPE (`hyperopt.tpe.suggest`)
+- Search space: `n ~ hp.uniform(-0.5, 1.5)`
+- Budget: `max_evals = 15` (edit in code)
+- Recommended seed: use `fmin(..., rstate=np.random.RandomState(42))`
+- Abaqus: 2024 (command `abq2024.bat`)
+- Python deps: hyperopt, numpy, scipy, pandas, xlrd
+
+Run
+    abaqus python TPE.py
+
+Outputs
+- Excel log: `Optimization_Results_TPE.xlsx` with per-iteration `n`, cost, and traces.
+- Abaqus results: `.odb` files per iteration in `working_directory`.
+
+Notes
+- Ensure `working_directory`, `input_file`, and data file paths are valid.
+- Replace any `np.inf` loss with a large finite value if Hyperopt warns (e.g., `1e6`).
+"""
+
 
 
 
@@ -86,6 +101,7 @@ Usage:
 Run directly inside an Abaqus Python environment:
     abaqus python PSO4.py
 """
+
 
 
 
